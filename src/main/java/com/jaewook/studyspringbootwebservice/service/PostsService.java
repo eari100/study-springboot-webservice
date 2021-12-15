@@ -2,13 +2,17 @@ package com.jaewook.studyspringbootwebservice.service;
 
 import com.jaewook.studyspringbootwebservice.domain.posts.Posts;
 import com.jaewook.studyspringbootwebservice.domain.posts.PostsRepository;
+import com.jaewook.studyspringbootwebservice.web.dto.PostsListResDto;
 import com.jaewook.studyspringbootwebservice.web.dto.PostsResDto;
 import com.jaewook.studyspringbootwebservice.web.dto.PostsSaveReqDto;
 import com.jaewook.studyspringbootwebservice.web.dto.PostsUpdateReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -36,4 +40,12 @@ public class PostsService {
 
         return new PostsResDto(entity);
     }
+
+    @Transactional(readOnly = true)
+    public List<PostsListResDto> findAllDesc() {
+        return postsRepository.findAllByOrderByIdDesc().stream()
+                .map(PostsListResDto::new)
+                .collect(Collectors.toList());
+    }
+
 }
