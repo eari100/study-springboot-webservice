@@ -5,9 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 public class PostsRepositoryTests {
@@ -41,6 +43,29 @@ public class PostsRepositoryTests {
         assertEquals(title, posts.getTitle());
         assertEquals(content, posts.getContent());
         assertEquals(author, posts.getAuthor());
+    }
+
+    @Test
+    public void BaseTimeEntity_등록() {
+        // given
+        LocalDateTime pastTime = LocalDateTime.of(2019, 6, 4, 0, 0,0);
+        postsRepository.save(Posts.builder()
+            .title("title")
+            .content("content")
+            .author("author")
+            .build());
+
+        // when
+        List<Posts> all = postsRepository.findAll();
+
+        // then
+        Posts posts = all.get(0);
+
+        System.out.println(">>>>>> createDate=" + posts.getCreatedDate()
+            +", modifiedDate=" + posts.getModifiedDate());
+
+        assertThat(posts.getCreatedDate()).isAfter(pastTime);
+        assertThat(posts.getModifiedDate()).isAfter(pastTime);
     }
 
 }
