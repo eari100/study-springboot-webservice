@@ -19,7 +19,7 @@ public class IndexControllerTests {
         String body = testRestTemplate.getForObject("/", String.class);
 
         // then
-        assertThat(body).contains("스프링부트 스터디");
+        assertThat(body).contains("스프링부트로 시작하는 웹 서비스");
     }
 
 }
